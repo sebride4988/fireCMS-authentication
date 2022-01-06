@@ -8,6 +8,6 @@ type NetworkStatus = {
 };
 
 export interface AuthenticationState {
-  networkStatus: Record<'signIn' | 'signOut', NetworkStatus>;
+  networkStatus: Record<'signIn' | 'signUp' | 'signOut', NetworkStatus>;
   userCredentials: UserCredential[];
 }
