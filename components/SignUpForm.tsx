@@ -6,15 +6,10 @@ import { Rule } from 'antd/lib/form';
 import josa from 'josa-js';
 
 import { useAuthDispatch, useAuthState } from '..';
-import { signUpEmailPasswordAsyncThunk } from '../slice';
+import { signUpEmailPasswordAsyncThunk } from '../slice/asyncThunks/signUp';
 
 import { PrivacyPolicyCheckbox } from './PrivacyPolicyCheckbox';
 import { TermOfUseCheckbox } from './TermOfUseCheckbox';
-
-interface SignUpFormData {
-  email: string;
-  password: string;
-}
 
 interface SignUpFormProps {
   renderTermOfUse: () => JSX.Element;

@@ -1,21 +1,13 @@
-import {
-  createUserWithEmailAndPassword,
-  fetchSignInMethodsForEmail,
-  signInWithEmailAndPassword,
-  signOut,
-} from '@firebase/auth';
-import {
-  createAsyncThunk,
-  createSlice,
-  miniSerializeError,
-} from '@reduxjs/toolkit';
-import _ from 'lodash';
+import { createSlice } from '@reduxjs/toolkit';
 
-import Authentication from '..';
 import { REDUX_NAME } from '../CONSTANTS';
 import { ProviderType } from '../enum/ProviderType';
 import { AuthenticationState } from '../types/AuthenticationState';
 import { UserCredential } from '../types/User';
+
+import { signInEmailPasswordAsyncThunk } from './asyncThunks/signIn';
+import { signOutAsyncThunk } from './asyncThunks/signOut';
+import { signUpEmailPasswordAsyncThunk } from './asyncThunks/signUp';
 
 // Define the initial state using that type
 const initialState: AuthenticationState = {
@@ -35,56 +27,6 @@ const initialState: AuthenticationState = {
   },
   userCredentials: [],
 };
-
-/**
- * ========== 액션 모음 =============
- */
-/**
- * 이메일
- */
-export const signInEmailPasswordAsyncThunk = createAsyncThunk(
-  REDUX_NAME + '/signIn/emailPassword',
-  async (formData: { email: string; password: string }) => {
-    return await signInWithEmailAndPassword(
-      Authentication.Auth,
-      formData.email,
-      formData.password,
-    );
-  },
-);
-
-export const signUpEmailPasswordAsyncThunk = createAsyncThunk(
-  REDUX_NAME + '/signUp/emailPassword',
-  async (formData: { email: string; password: string }) => {
-    const methods = await fetchSignInMethodsForEmail(
-      Authentication.Auth,
-      formData.email,
-    );
-    if (methods.length > 0) {
-      throw miniSerializeError({
-        code: '회원가입',
-        name: '아이디 중복',
-        message: `이미 ${methods.join(',')} 방식으로 가입한 이메일입니다.`,
-      });
-    }
-    return await createUserWithEmailAndPassword(
-      Authentication.Auth,
-      formData.email,
-      formData.password,
-    );
-  },
-);
-
-/**
- * 공통
- */
-export const signOutAsyncThunk = createAsyncThunk(
-  REDUX_NAME + '/signOut',
-  async () => {
-    await signOut(Authentication.Auth);
-  },
-  {},
-);
 
 export const authenticationSlice = createSlice({
   name: REDUX_NAME,

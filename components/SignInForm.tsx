@@ -4,7 +4,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Checkbox, Typography, Spin, message } from 'antd';
 
 import { useAuthDispatch, useAuthState } from '..';
-import { signInEmailPasswordAsyncThunk } from '../slice';
+import { signInEmailPasswordAsyncThunk } from '../slice/asyncThunks/signIn';
 
 export interface SignInFormData {
   email: string;
@@ -24,7 +24,8 @@ export function SignInForm(props: SignInFormProps) {
   );
   const signIn = useCallback(
     (formData: { email: string; password: string }) => {
-      dispatch(signInEmailPasswordAsyncThunk(formData))
+      const signInAction = signInEmailPasswordAsyncThunk(formData);
+      dispatch(signInAction)
         .unwrap()
         .then(() => {
           message.success('로그인 되었습니다');
