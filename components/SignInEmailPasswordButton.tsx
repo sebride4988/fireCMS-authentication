@@ -35,12 +35,6 @@ function SignInEmailPasswordButton(props: MergeProps) {
   const closeModal = useCallback(() => {
     setIsModalVisible(false);
   }, [setIsModalVisible]);
-  // useEffect(() => {
-
-  // }, [formData]);
-  // const openSignIn = useCallback(() => {
-  //   dispatch(signInEmailPasswordAction());
-  // }, [dispatch]);
 
   useUnmount(() => {
     setContentType(ContentType.SignIn);
