@@ -10,12 +10,19 @@ interface SignOutButtonProps {}
 
 type MergeProps = SignOutButtonProps;
 
-function SignOutButton(props: MergeProps) {
+type SignOutHook = () => () => void;
+
+const useSignOut: SignOutHook = () => {
   const dispatch = useAuthDispatch();
   const signOut = useCallback(() => {
     const signOutAction = signOutAsyncThunk();
     dispatch(signOutAction);
   }, [dispatch]);
+  return signOut;
+};
+
+function SignOutButton(props: MergeProps) {
+  const signOut = useSignOut();
 
   return (
     <Button

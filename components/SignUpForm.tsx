@@ -2,14 +2,13 @@ import { useCallback, useMemo } from 'react';
 
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Typography, Spin, message } from 'antd';
-import { Rule } from 'antd/lib/form';
-import josa from 'josa-js';
 
 import { useAuthDispatch, useAuthState } from '..';
 import { signUpEmailPasswordAsyncThunk } from '../slice/asyncThunks/signUp';
 
 import { PrivacyPolicyCheckbox } from './PrivacyPolicyCheckbox';
 import { TermOfUseCheckbox } from './TermOfUseCheckbox';
+import { createRule } from './utils/createRule';
 
 interface SignUpFormProps {
   renderTermOfUse: () => JSX.Element;
@@ -18,38 +17,11 @@ interface SignUpFormProps {
   onFinish?: () => void;
 }
 
-function createRule(type: 'required', label: string): Rule;
-function createRule(type: 'email', label: string): Rule;
-function createRule(type: 'min', label: string, min: number): Rule;
-function createRule(
-  type: 'required' | 'email' | 'min',
-  label: string,
-  min?: number,
-): Rule {
-  switch (type) {
-    case 'required':
-      return {
-        required: true,
-        message: josa.r(label, '을/를') + ' 입력해주세요',
-      };
-    case 'email':
-      return {
-        type: 'email',
-        message: josa.r(label, '은/는') + ' abc@def.ghi 형식이어야 합니다',
-      };
-    case 'min':
-      return {
-        min,
-        message:
-          josa.r(label, '은/는') + ' 적어도 ' + min + '글자 이상이어야 합니다',
-      };
-    default:
-      throw new Error('unknown rule type');
-  }
-}
+type SignUpHook = (
+  onFinish?: () => void,
+) => [(formData: { email: string; password: string }) => void, boolean];
 
-export function SignUpForm(props: SignUpFormProps) {
-  const onFinish = props.onFinish;
+const useSignUp: SignUpHook = (onFinish?: () => void) => {
   const dispatch = useAuthDispatch();
   const signUpLoading = useAuthState(
     (state) => state.networkStatus.signUp.loading,
@@ -66,6 +38,11 @@ export function SignUpForm(props: SignUpFormProps) {
     },
     [onFinish, dispatch],
   );
+  return [signUp, signUpLoading];
+};
+
+export function SignUpForm(props: SignUpFormProps) {
+  const [signUp, signUpLoading] = useSignUp(props.onFinish);
   const emailRules = useMemo(() => {
     const label = '이메일';
     const requiredRule = createRule('required', label);

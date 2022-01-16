@@ -16,8 +16,11 @@ interface SignInFormProps {
   onFinish?: () => void;
 }
 
-export function SignInForm(props: SignInFormProps) {
-  const { onFinish } = props;
+type SignInHook = (
+  onFinish?: () => void,
+) => [(formData: { email: string; password: string }) => void, boolean];
+
+const useSignIn: SignInHook = (onFinish?: () => void) => {
   const dispatch = useAuthDispatch();
   const signInLoading = useAuthState(
     (state) => state.networkStatus.signIn.loading,
@@ -34,6 +37,11 @@ export function SignInForm(props: SignInFormProps) {
     },
     [dispatch, onFinish],
   );
+  return [signIn, signInLoading];
+};
+
+export function SignInForm(props: SignInFormProps) {
+  const [signIn, signInLoading] = useSignIn(props.onFinish);
   return (
     <Form
       name="normal_login"

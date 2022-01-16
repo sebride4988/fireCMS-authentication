@@ -1,5 +1,3 @@
-import { Authentication } from './Authentication';
+export { FireAuthentication } from './FireAuthentication';
 
 export * from './hooks';
-
-export default Authentication;

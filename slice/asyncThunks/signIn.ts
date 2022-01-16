@@ -1,8 +1,7 @@
-import { signInWithEmailAndPassword } from '@firebase/auth';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { Authentication } from '../../Authentication';
 import { REDUX_NAME } from '../../CONSTANTS';
+import { FireAuthentication } from '../../FireAuthentication';
 
 /**
  * 이메일
@@ -10,8 +9,8 @@ import { REDUX_NAME } from '../../CONSTANTS';
 export const signInEmailPasswordAsyncThunk = createAsyncThunk(
   REDUX_NAME + '/signIn/emailPassword',
   async (formData: { email: string; password: string }) => {
-    return await signInWithEmailAndPassword(
-      Authentication.Auth,
+    const fireAuthentication = FireAuthentication.Instance;
+    return await fireAuthentication.signInWithEmailAndPassword(
       formData.email,
       formData.password,
     );

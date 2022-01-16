@@ -1,8 +1,7 @@
-import { signOut } from '@firebase/auth';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { Authentication } from '../../Authentication';
 import { REDUX_NAME } from '../../CONSTANTS';
+import { FireAuthentication } from '../../FireAuthentication';
 
 /**
  * 이메일
@@ -10,7 +9,8 @@ import { REDUX_NAME } from '../../CONSTANTS';
 export const signOutAsyncThunk = createAsyncThunk(
   REDUX_NAME + '/signOut',
   async () => {
-    await signOut(Authentication.Auth);
+    const fireAuthentication = FireAuthentication.Instance;
+    await fireAuthentication.signOut();
   },
   {},
 );
