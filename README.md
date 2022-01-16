@@ -1,6 +1,6 @@
 # fireCMS-authentication
 
- fireCMS의 authentication
+fireCMS의 authentication
 
 ## 특징
 
@@ -15,14 +15,16 @@ import Authentication from 'fireCMS/authentication';
 
 ...
 
-<FireCMSCore
-  ...
-  services={{
-    authentication: Authentication,
-  }}
->
-  {props.children}
-</FireCMSCore>
+// FireCMS 초기화
+Core.initialize(firebaseConfig);
+Core.initializeService(FireAuthentication);
+
+const storeConfig = {
+  reducer: {
+    authentication: FireAuthentication.reducer,
+  },
+  devTools: true,
+};
 
 ...
 ```
